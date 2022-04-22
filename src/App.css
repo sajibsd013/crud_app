@@ -1,9 +1,12 @@
-.active-link{
-    border: 1px solid rgba(6, 102, 191, 0.92)!important;
-    z-index: 9999;
+.active-link {
+    border: 1px solid rgba(6, 102, 191, 0.92) !important;
+    z-index: 55;
 }
 
 .disabled-link {
-    pointer-events: none!important;
-    cursor:progress!important;
-  }
+    pointer-events: none !important;
+    cursor: progress !important;
+}
+.pointer{
+    cursor: pointer;
+}

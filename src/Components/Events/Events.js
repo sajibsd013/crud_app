@@ -1,26 +1,24 @@
-import axios from 'axios'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Card, Form, Spinner } from 'react-bootstrap'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import API from '../Lib/API'
+import React, { useEffect, useState } from 'react'
+import { Card, Form, Alert } from 'react-bootstrap'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import API from '../../Lib/API'
 import EventPagination from './EventPagination'
 import EventTable from './EventTable'
 
 
 
-const Events = (props) => {
+const Events = () => {
     let { page } = useParams();
     const navigate = useNavigate();
     const goPageOne = () => {
         navigate("/events/1");
     }
 
-
     const [events, setEvents] = useState([]);
     const [pageSize, setPageSize] = useState(5);
     const [totalEvents, setTotalEvents] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [showAlert, setShowAlert] = useState(false);
 
 
     const onEventsChange = (events, loading, total) => {
@@ -29,28 +27,46 @@ const Events = (props) => {
         setTotalEvents(total);
     }
 
-
-    useEffect(() => {
-        API.get(page, pageSize, onEventsChange);
-    }, [pageSize, page]);
-
-
     const onPageSizeChange = event => {
         const pageSize = event.target.value;
         goPageOne();
         setPageSize(pageSize);
     }
+    const onDelete = (loading) => setIsLoading(loading);
+
+    const onEventDelete = (id) => {
+        const API_URL = `/api/events/${id}`;
+        API.delete(API_URL, onDelete);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 3000);
+        navigate("/events/1");
+
+    }
+
+    useEffect(() => {
+        const API_URL = `/api/events/?page=${page}&size=${pageSize}`;
+        API.get(API_URL, onEventsChange);
+    }, [pageSize, page, isLoading === false]);
 
 
 
     return (
-        <div className='mt-5'>
-            <Card className="shadow border-0 ">
+        <div className=' my-2' >
+            <div style={{height:'70px'}}>
+                <Alert variant="danger" show={showAlert}>
+                    <strong>Success! </strong>
+                    <span>
+                        Event Successfully Deleted...
+                    </span>
+                </Alert>
+            </div>
+            <Card className="shadow border-0 my-1">
+
                 <Card.Header className='bg-white '>
                     <h5>Events</h5>
                     <div>
                         <small className='text-muted'>
-                            Life of events! - <Link to="/create" className='text-decoration-none'>Create</Link>
+                            Life of events! - <Link to="/events/create" className='text-decoration-none'>Create</Link>
                         </small>
                     </div>
                 </Card.Header>
@@ -66,7 +82,11 @@ const Events = (props) => {
                         </Form.Select>
                         <h6>entries</h6>
                     </div>
-                    <EventTable events={events} isLoading={isLoading}></EventTable>
+                    <EventTable
+                        events={events}
+                        isLoading={isLoading}
+                        onEventDelete={onEventDelete}
+                    />
                 </Card.Body>
 
 
@@ -79,6 +99,8 @@ const Events = (props) => {
                     />
                 </Card.Footer>
             </Card>
+
+
         </div>
     )
 
