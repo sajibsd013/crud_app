@@ -27,7 +27,7 @@ export default class EventPagination extends Component {
             }
 
             const active_class = "page-item page-link active-link";
-            const others_class = "page-item page-link";
+            const others_class = "page-item page-link text-muted";
 
             let PagiNation = null;
             if (pageNumbers.length > 6) {
@@ -102,15 +102,15 @@ export default class EventPagination extends Component {
             if (totalEvents != 0) {
                 return (
                     <div className='d-flex justify-content-between align-items-center py-3'>
-                        <p className='my-0'>Showing {pageSize * currentPage - pageSize + 1} to {pageSize * currentPage <= totalEvents ? pageSize * currentPage : totalEvents} out of {totalEvents} results</p>
+                        <p className='my-0 text-muted'> Showing <span className='_footer_text_weight'>{pageSize * currentPage - pageSize + 1}</span> to <span className='_footer_text_weight'> {pageSize * currentPage <= totalEvents ? pageSize * currentPage : totalEvents}</span> out of <span  className='_footer_text_weight'>{totalEvents}</span> results</p>
 
                         <Pagination className='my-0'>
-                            <li className={currentPage == 1 ? "page-item disabled" : "page-item"} >
-                                <NavLink className='page-link ' to={PrevURL} > <FontAwesomeIcon icon={faAngleLeft} /> Previous</NavLink>
+                            <li className={currentPage == 1 ? "page-item disabled" : "page-item text-muted"} >
+                                <NavLink className='page-link text-muted' to={PrevURL} > <FontAwesomeIcon icon={faAngleLeft} /> Previous</NavLink>
                             </li>
                             {PagiNation}
-                            <li className={currentPage == pageNumbers.length ? "page-item disabled" : "page-item"} >
-                                <NavLink className='page-link' to={NextURL} >Next <FontAwesomeIcon icon={faAngleRight} /></NavLink>
+                            <li className={currentPage == pageNumbers.length ? "page-item disabled" : "page-item "} >
+                                <NavLink className='page-link text-muted' to={NextURL} >Next <FontAwesomeIcon icon={faAngleRight} /></NavLink>
                             </li>
 
                         </Pagination>

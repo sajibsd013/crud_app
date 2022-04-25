@@ -43,16 +43,18 @@ const Events = () => {
 
     }
 
+
     useEffect(() => {
+        document.title = `Events - Page ${page}`;
         const API_URL = `/api/events/?page=${page}&size=${pageSize}`;
         API.get(API_URL, onEventsChange);
-    }, [pageSize, page, isLoading === false]);
+    }, [pageSize, page, isLoading]);
 
 
 
     return (
-        <div className=' my-2' >
-            <div style={{height:'70px'}}>
+        <div className=' my-2 container' >
+            <div style={{ height: '70px' }}>
                 <Alert variant="danger" show={showAlert}>
                     <strong>Success! </strong>
                     <span>
@@ -60,14 +62,14 @@ const Events = () => {
                     </span>
                 </Alert>
             </div>
-            <Card className="shadow border-0 my-1">
+            <Card className="shadow-lg border-0 my-1 ">
 
                 <Card.Header className='bg-white '>
-                    <h5>Events</h5>
+                    <h5 className='mt-1'>Events</h5>
                     <div>
-                        <small className='text-muted'>
-                            Life of events! - <Link to="/events/create" className='text-decoration-none'>Create</Link>
-                        </small>
+                        <p className='_text_Color1'>
+                            Life of events! - <Link to="/events/create" className='text-decoration-none _text_Color2'>Create</Link>
+                        </p>
                     </div>
                 </Card.Header>
 

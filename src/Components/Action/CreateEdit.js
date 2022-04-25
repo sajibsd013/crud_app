@@ -1,7 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
-import { Card, Form } from 'react-bootstrap'
+import { Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import API from '../../Lib/API';
+import dateFormat from "dateformat";
+
 
 
 
@@ -11,81 +14,116 @@ const CreateEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [name, setName] = useState('');
-    const [location, setLocation] = useState(-1);
-    const [date, setDate] = useState('');
+
+    const [formData, setFormData] = useState({ Location: "-1" });
+    const [nameError, setNameError] = useState('');
+    const [locError, setLocError] = useState('');
+    const [dateError, setDateError] = useState('');
+
+
+    const formValidation = () => {
+        if (formData["Name"]) {
+            setNameError(false);
+        } else {
+            setNameError(true);
+        }
+
+        if (formData["Date"]) {
+            setDateError(false);
+        } else {
+            setDateError(true);
+        }
+
+        if (formData["Location"] == -1) {
+            setLocError(true)
+        } else {
+            setLocError(false);
+        }
+
+
+    }
+
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        formValidation();
+
+
+        if (formData["Date"] && formData["Date"] && formData["Location"] != -1) {
+            let API_URL = '';
+            if (id) {
+                API_URL = `/api/events/${id}/`;
+                API.put(API_URL, formData);
+                navigate(-1);
+
+
+            } else {
+                API_URL = `/api/events/`;
+                API.post(API_URL, formData);
+                navigate('/events/1');
+
+            }
+        }
+
+
+    }
+
 
     const onInputChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
+        setFormData({
+            ...formData,
+            [name]: value,
+        })
         switch (name) {
-            case "name":
-                setName(value);
+            case "Name":
+                setNameError(false);
                 break;
-
-            case "location":
-                setLocation(value);
+            case "Date":
+                setDateError(false);
                 break;
-
-            case "date":
-                setDate(value);
-                console.log(date)
+            case "Location":
+                setLocError(false);
                 break;
 
             default:
                 break;
         }
-    }
-
-
-    const onFormSubmit = (event) => {
-        event.preventDefault();
-        let form_data = new FormData();
-
-        form_data.append("Name", name);
-        form_data.append("Location", location);
-        form_data.append("Date", date);
-
-        let API_URL = '';
-        if (id) {
-            API_URL = `/api/events/${id}/`;
-            API.put(API_URL, form_data);
-            navigate(-1);
-
-
-        } else {
-            API_URL = `/api/events/`;
-            API.post(API_URL, form_data);
-            navigate('/events/1');
-
-
-        }
 
     }
 
+    const setFormState = ({ Name, Location, Date }) => {
 
+        const date = dateFormat(Date, "UTC:yyyy-mm-dd'T'HH:MM");
+        setFormData({
+            ...formData,
+            ["Name"]: Name,
+            ["Location"]: Location,
+            ["Date"]: date,
+        })
 
-    const setFormState = (event) => {
-        const { Name, Location, Date } = event;
-        const date = Date.slice(0, -4);
-
-        setName(Name);
-        setLocation(Location);
-        setDate(date);
 
     }
 
     useEffect(() => {
         if (id) {
+            document.title = `Edit Event`;
             const API_URL = `/api/events/${id}`;
             API.getOne(API_URL, setFormState);
+        } else {
+            document.title = `Create Event`;
         }
+
 
     }, [])
 
+    const { Name, Location, Date } = formData;
+
 
     return (
-        <div className='my-2' >
+        <div className='my-2 container' >
             <div style={{ height: '70px' }}>
                 {/* <Alert variant="danger" show={showAlert}>
                     <strong>Success! </strong>
@@ -93,53 +131,99 @@ const CreateEdit = () => {
                         Event Successfully Deleted...
                     </span>
                 </Alert> */}
+
             </div>
 
-            <Card className="shadow border-0 my-1">
+
+
+            <Card className="shadow-lg border-0 my-1">
 
                 <Card.Header className='bg-white '>
-                    <h5>Events</h5>
+                    <h5 className='mt-1'>Events</h5>
                     <div>
-                        <small className='text-muted'>
-                            {id ? 'Edit' : 'Create'} an events! - <small onClick={() => navigate(-1)} className='text-primary pointer'>Back</small>
-                        </small>
+                        <p className='_text_Color1'>
+                            {id ? 'Edit' : 'Create'} an event! - <a onClick={() => navigate(-1)} className='_text_Color2 text-decoration-none pointer'>Back</a>
+                        </p>
                     </div>
                 </Card.Header>
-                <Form onSubmit={event => onFormSubmit(event)}>
+                <Form onSubmit={handleSubmit}>
                     <Card.Body>
-                        <div className="row g-1 py-3">
-                            <div className="col-12 ">
-                                <label className="">Name</label>
-                                <input type="text" name='name' className="form-control" value={name} onChange={event => onInputChange(event)} placeholder="Enter event name" required />
-                            </div>
-                            <div className="col-md-8 ">
-                                <label >Location</label>
-                                <select aria-label="Default select example" name="location" value={location} onChange={event => onInputChange(event)} className="form-select" required>
-                                    <option disabled value="-1">Select Location</option>
-                                    <option >Dhaka</option>
-                                    <option >Sylhet</option>
-                                    <option >London</option>
-                                    <option >Khulna</option>
-                                </select>
-                            </div>
-                            <div className="col-md-4 ">
-                                <label className="">Date</label>
-                                <input type="datetime-local" name='date' value={date} onChange={event => onInputChange(event)} className='form-control' required />
-                            </div>
-                        </div>
+
+                        <Row className="g-2">
+                            <Form.Group as={Col} md={12} controlId="validationName">
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter Event Name"
+                                    value={Name}
+                                    onChange={event => onInputChange(event)}
+                                    name="Name"
+                                    isInvalid={nameError}
+
+
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Please type event name!
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} md="8" controlId="validationLocation">
+                                <Form.Label>Location  </Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Select
+                                        aria-label="Default select example"
+                                        value={Location}
+                                        isInvalid={locError}
+                                        onChange={event => onInputChange(event)}
+                                        name="Location"
+                                    >
+                                        <option disabled value="-1">Select Location</option>
+                                        <option >Russia</option>
+                                        <option >El Salvador</option>
+                                        <option >United States</option>
+                                        <option >Macedonia</option>
+                                        <option >China</option>
+
+                                    </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please select location.
+                                    </Form.Control.Feedback>
+
+                                </InputGroup>
+                            </Form.Group>
+                            <Form.Group as={Col} md="4" controlId="validationDate">
+                                <Form.Label>Date</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        type="datetime-local"
+                                        name="Date"
+                                        aria-describedby="inputGroupPrepend"
+                                        isInvalid={dateError}
+                                        value={Date}
+                                        onChange={event => onInputChange(event)}
+
+
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please choose date.
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                            </Form.Group>
+                        </Row>
+
 
                     </Card.Body>
 
 
-                    <Card.Footer className="d-flex justify-content-end py-3">
-                        <button className='btn btn-primary ' type="submit">
+                    <Card.Footer className="d-flex justify-content-end py-3 border-0">
+                        <button className='btn submit_btn px-3' type="submit">
                             {id ? 'Update' : 'Create'}
                         </button>
                     </Card.Footer>
                 </Form>
 
             </Card>
-        </div>
+        </div >
     )
 }
 

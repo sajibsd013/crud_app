@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Modal, Spinner, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import dateFormat from "dateformat";
 
 export default class EventTable extends Component {
     state = {
@@ -11,8 +12,6 @@ export default class EventTable extends Component {
     render() {
         const { events, isLoading, onEventDelete } = this.props;
         const onDeleteClick = (id) => this.setState({ showModal: true, deleteEvent: id })
-
-
 
         if (isLoading) {
             return (
@@ -44,25 +43,26 @@ export default class EventTable extends Component {
                     </Modal>
                     <Table size="sm">
                         <thead className=''>
-                            <tr className='text-secondary'>
-                                <th className='border-0'>Name</th>
-                                <th className='border-0'>Location</th>
+                            <tr className='_text_Color1 '>
+                                <th className='border-0 '>Name</th>
+                                <th className='border-0 '>Location</th>
                                 <th className='border-0'>Time</th>
                                 <th className='border-0'>Action</th>
                             </tr>
                         </thead>
                         <tbody className='border-0'>
                             {
-                                events.map((event) => {
-                                    const updateURL = `/Events/edit/${event.id}`
+                                
+                                events.map(({ id, Name, Location, Date }) => {
+                                    const updateURL = `/Events/edit/${id}`;
                                     return (
-                                        <tr key={event.id} className=''>
-                                            <td className='border-0 '>{event.Name}</td>
-                                            <td className='border-0'>{event.Location}</td>
-                                            <td className='border-0'>{event.Date}</td>
-                                            <td className='border-0'>
-                                                <Link to={updateURL} className='text-decoration-none me-2'>Edit</Link>
-                                                <small className='text-primary pointer' onClick={() => onDeleteClick(event.id)}>Delete</small>
+                                        <tr key={id} className=''>
+                                            <td className=' _table_date pt-4'>{Name}</td>
+                                            <td className='border-0 pt-4'>{Location}</td>
+                                            <td className='_table_date pt-4'>{dateFormat(Date, "UTC:mmm dd, yyyy - HH:MM:ss Z")}</td>
+                                            <td className='_table_date pt-4'>
+                                                <Link to={updateURL} className='text-decoration-none _text_Color2 link_weight me-2'>Edit</Link>
+                                                <a className='_text_Color2 text-decoration-none pointer link_weight' onClick={() => onDeleteClick(id)}>Delete</a>
                                             </td>
                                         </tr>
                                     )
