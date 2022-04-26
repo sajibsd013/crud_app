@@ -14,6 +14,7 @@ git clone https://github.com/sajibsd013/crud_app.git
 ##### Step 2 - Then install the dependencies:
 
 ```sh
+cd crud_app
 npm install
 ```
 
