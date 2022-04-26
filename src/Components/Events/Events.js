@@ -53,8 +53,8 @@ const Events = () => {
 
 
     return (
-        <div className=' my-2 container' >
-            <div style={{ height: '70px' }}>
+        <div className=' container' >
+            <div style={{ height: '70px' }} className="my-2">
                 <Alert variant="danger" show={showAlert}>
                     <strong>Success! </strong>
                     <span>
@@ -64,11 +64,11 @@ const Events = () => {
             </div>
             <Card className="shadow-lg border-0 my-1 ">
 
-                <Card.Header className='bg-white '>
+                <Card.Header className='bg-white'>
                     <h5 className='mt-1'>Events</h5>
                     <div>
                         <p className='_text_Color1'>
-                            Life of events! - <Link to="/events/create" className='text-decoration-none _text_Color2'>Create</Link>
+                            List of events! - <Link to="/events/create" className='text-decoration-none _text_Color2'>Create</Link>
                         </p>
                     </div>
                 </Card.Header>
@@ -92,7 +92,7 @@ const Events = () => {
                 </Card.Body>
 
 
-                <Card.Footer className=" bg-white ">
+                <Card.Footer className=" bg-white">
                     <EventPagination
                         totalEvents={totalEvents}
                         pageSize={pageSize}

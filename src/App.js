@@ -6,7 +6,7 @@ import Events from './Components/Events/Events';
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="App bg-muted min-vh-100">
       <Routes>
         <Route path="/" element={<Navigate to="/events/1" />} />
         <Route path="/events" element={<Navigate to="/events/1" />} />

@@ -60,7 +60,7 @@ export default class EventTable extends Component {
                                             <td className=' _table_date pt-4'>{Name}</td>
                                             <td className='border-0 pt-4'>{Location}</td>
                                             <td className='_table_date pt-4'>{dateFormat(Date, "UTC:mmm dd, yyyy - HH:MM:ss Z")}</td>
-                                            <td className='_table_date pt-4'>
+                                            <td className='_table_date pt-4 d-flex flex-column flex-md-row'>
                                                 <Link to={updateURL} className='text-decoration-none _text_Color2 link_weight me-2'>Edit</Link>
                                                 <a className='_text_Color2 text-decoration-none pointer link_weight' onClick={() => onDeleteClick(id)}>Delete</a>
                                             </td>

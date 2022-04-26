@@ -123,8 +123,8 @@ const CreateEdit = () => {
 
 
     return (
-        <div className='my-2 container' >
-            <div style={{ height: '70px' }}>
+        <div className='container' >
+            <div style={{ height: '70px' }} className="my-2">
                 {/* <Alert variant="danger" show={showAlert}>
                     <strong>Success! </strong>
                     <span>
