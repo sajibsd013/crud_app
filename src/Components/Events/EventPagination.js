@@ -119,7 +119,9 @@ export default class EventPagination extends Component {
                 )
 
             }else{
-                <div></div>
+                return(
+                    <h6 className='text-center text-mute '>No Events</h6>
+                )
             }
         }
 

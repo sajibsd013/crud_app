@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap'
+import { Alert, Card, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import API from '../../Lib/API';
 import dateFormat from "dateformat";
@@ -19,6 +19,8 @@ const CreateEdit = () => {
     const [nameError, setNameError] = useState('');
     const [locError, setLocError] = useState('');
     const [dateError, setDateError] = useState('');
+    const [showAlert, setShowAlert] = useState({ type: '', show: false, msg: '' });
+
 
 
     const formValidation = () => {
@@ -43,26 +45,32 @@ const CreateEdit = () => {
 
     }
 
+    const handleReset = () => {
+        setFormData({
+            ...formData,
+            Location: "-1",
+            Name: '',
+            Date: '',
+        })
+
+    }
+
 
 
     const handleSubmit = (event) => {
         event.preventDefault();
         formValidation();
 
-
         if (formData["Date"] && formData["Date"] && formData["Location"] != -1) {
             let API_URL = '';
             if (id) {
                 API_URL = `/api/events/${id}/`;
-                API.put(API_URL, formData);
-                navigate(-1);
-
+                API.put(API_URL, formData, setShowAlert);
+                // navigate(-1);
 
             } else {
                 API_URL = `/api/events/`;
-                API.post(API_URL, formData);
-                navigate('/events/1');
-
+                API.post(API_URL, formData, setShowAlert, handleReset);
             }
         }
 
@@ -111,7 +119,7 @@ const CreateEdit = () => {
         if (id) {
             document.title = `Edit Event`;
             const API_URL = `/api/events/${id}`;
-            API.getOne(API_URL, setFormState);
+            API.getOne(API_URL, setFormState, setShowAlert);
         } else {
             document.title = `Create Event`;
         }
@@ -120,17 +128,17 @@ const CreateEdit = () => {
     }, [])
 
     const { Name, Location, Date } = formData;
+    const { type, show, msg } = showAlert;
 
 
     return (
         <div className='container' >
             <div style={{ height: '70px' }} className="my-2">
-                {/* <Alert variant="danger" show={showAlert}>
-                    <strong>Success! </strong>
+                <Alert variant={type} show={show}>
                     <span>
-                        Event Successfully Deleted...
+                        {msg}
                     </span>
-                </Alert> */}
+                </Alert>
 
             </div>
 

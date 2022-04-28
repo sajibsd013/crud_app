@@ -18,13 +18,15 @@ const Events = () => {
     const [pageSize, setPageSize] = useState(5);
     const [totalEvents, setTotalEvents] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState({ type: '', show: false, msg: '' });
 
 
     const onEventsChange = (events, loading, total) => {
         setEvents(events);
         setIsLoading(loading);
         setTotalEvents(total);
+
+
     }
 
     const onPageSizeChange = event => {
@@ -36,10 +38,10 @@ const Events = () => {
 
     const onEventDelete = (id) => {
         const API_URL = `/api/events/${id}`;
-        API.delete(API_URL, onDelete);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-        navigate("/events/1");
+        API.delete(API_URL, onDelete, setShowAlert);
+
+        // navigate("/events/1");
+        setTotalEvents(pre => pre - 1);
 
     }
 
@@ -47,18 +49,18 @@ const Events = () => {
     useEffect(() => {
         document.title = `Events - Page ${page}`;
         const API_URL = `/api/events/?page=${page}&size=${pageSize}`;
-        API.get(API_URL, onEventsChange);
-    }, [pageSize, page, isLoading]);
+        API.get(API_URL, onEventsChange, setShowAlert);
+    }, [pageSize, page, totalEvents]);
 
 
+    const { type, show, msg } = showAlert;
 
     return (
         <div className=' container' >
             <div style={{ height: '70px' }} className="my-2">
-                <Alert variant="danger" show={showAlert}>
-                    <strong>Success! </strong>
+                <Alert variant={type} show={show}>
                     <span>
-                        Event Successfully Deleted...
+                        {msg}
                     </span>
                 </Alert>
             </div>
@@ -101,8 +103,6 @@ const Events = () => {
                     />
                 </Card.Footer>
             </Card>
-
-
         </div>
     )
 
