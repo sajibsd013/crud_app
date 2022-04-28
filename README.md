@@ -42,7 +42,7 @@ The Application Runs on <strong> localhost:3000 </strong>
 
 
 ![image](https://user-images.githubusercontent.com/78471300/165229993-319e90fc-1ca5-450c-8271-349daa242153.png)
-<h6 align="center"> Figure 3 -  Edit an even </h6>
+<h6 align="center"> Figure 3 -  Edit an event </h6>
 <br>
 
 
